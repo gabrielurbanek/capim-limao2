@@ -1,0 +1,18 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select extensions.plan(13);
+select extensions.ok(public.is_valid_sale_quantity('un', 1), 'unidade aceita inteiro positivo');
+select extensions.ok(not public.is_valid_sale_quantity('un', 1.5), 'unidade rejeita fracionário');
+select extensions.ok(public.is_valid_sale_quantity('g', 250), 'grama aceita inteiro em gramas');
+select extensions.ok(not public.is_valid_sale_quantity('g', 250.5), 'grama rejeita fracionário');
+select extensions.ok(public.is_valid_sale_quantity('kg', 1.250), 'quilograma aceita três casas');
+select extensions.ok(not public.is_valid_sale_quantity('kg', 1.2501), 'quilograma rejeita mais de três casas');
+select extensions.ok(not public.is_valid_sale_quantity('unknown', 1), 'unidade desconhecida é recusada');
+select extensions.ok(not public.is_valid_sale_quantity('kg', 0), 'quantidade zero é recusada');
+select extensions.is(public.calculate_line_total(40.00, 0.250), 10.00::numeric, '250 g a R$ 40/kg = R$ 10');
+select extensions.is(public.calculate_line_total(40.00, 0.500), 20.00::numeric, '500 g a R$ 40/kg = R$ 20');
+select extensions.is(public.calculate_line_total(40.00, 0.750), 30.00::numeric, '750 g a R$ 40/kg = R$ 30');
+select extensions.is(public.calculate_line_total(40.00, 1.250), 50.00::numeric, '1,250 kg a R$ 40/kg = R$ 50');
+select extensions.is(public.calculate_line_total(3.333, 0.333), 1.11::numeric, 'arredondamento monetário para duas casas');
+select * from extensions.finish();
+rollback;

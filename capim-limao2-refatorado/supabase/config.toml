@@ -1,0 +1,52 @@
+project_id = "capimlim-store"
+
+[api]
+enabled = true
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3000/admin/login"]
+jwt_expiry = 3600
+enable_signup = false
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = true
+enable_confirmations = true
+
+[functions.create-order]
+verify_jwt = false
+
+[functions.create-pos-sale]
+verify_jwt = true
+
+[functions.update-order-status]
+verify_jwt = true
+
+[functions.set-order-payment-status]
+verify_jwt = true
+
+[functions.adjust-stock]
+verify_jwt = true
+
+[functions.receive-stock]
+verify_jwt = true
+
+[functions.cancel-sale]
+verify_jwt = true
+
+[functions.manage-staff]
+verify_jwt = true
+
+[functions.delete-product-image]
+verify_jwt = true
+
+[functions.bootstrap-owner]
+verify_jwt = false
+
+[functions.expire-reservations]
+verify_jwt = false
